@@ -37,6 +37,7 @@ class CategoriaController extends Controller
     public function show(Categoria $categoria)
     {
         //
+        /* This is a comment to push on git */
     }
 
     /**
