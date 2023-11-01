@@ -1,0 +1,47 @@
+DATOS DE EJEMPLO PARA STORE (JSON).
+
+//TABLA CATEGORIA
+{
+  "nombre":"Deportes"
+}
+
+//TABLA TIPO USUARIO
+{
+  "tipo":"Administrador"
+}
+
+//TABLA TIPO PUBLICACION
+{
+  "tipo":"Evento"
+}
+
+//TABLA USUARIO
+{
+  "carnet":202022,
+  "correo":"robert@correo.com",
+  "usuario":"Robert J.",
+  "tipo_usuario":1
+}
+
+
+//TABLA PUBLICACION
+{
+  "titulo":"Segunda publicación",
+  "subtitulo":"Este es el subtitulo",
+  "descripcion":"Contenido de la publicación.",
+  "fecha":"2023-11-01",
+  "destacado":false,
+  "visible":true,
+  "imagen":"url de imagen",	
+  "id_categoria":1,
+  "id_tipo_publicacion":1,
+  "id_usuario":202021
+}
+
+//TABLA COMENTARIO
+{
+  "contenido":"Contenido del comentario",
+  "id_publicacion":1,
+  "id_usuario":202021
+}
+
