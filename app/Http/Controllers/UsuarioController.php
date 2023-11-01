@@ -14,8 +14,10 @@ class UsuarioController extends Controller
     public function index()
     {
         //
-        $usuarios = Usuario::all();
+        /* $usuarios = Usuario::all(); */
 
+        $usuarios = Usuario::select("usuarios.*", 'tipo_usuario.tipo as tipo_usuario')
+        ->join('tipo_usuario', 'tipo_usuario.id', '=', 'usuarios.tipo_usuario')->get();
         /* Evaluar si hay o no registros */
         if($usuarios->count()>0){
             return response()->json([

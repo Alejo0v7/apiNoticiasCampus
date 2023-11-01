@@ -14,7 +14,15 @@ class PublicacionController extends Controller
     public function index()
     {
         //
-        $publicaciones = Publicacion::all();
+        /* $publicaciones = Publicacion::all(); */
+        $publicaciones = Publicacion::select(
+            "publicacion.*", 'categorias.nombre as id_categoria',
+            'tipo_publicacion.tipo as id_tipo_publicacion',
+            'usuarios.usuario as id_usuario')
+        ->join('categorias', 'categorias.id', '=', 'publicacion.id_categoria')
+        ->join('tipo_publicacion', 'tipo_publicacion.id', '=', 'publicacion.id_tipo_publicacion')
+        ->join('usuarios', 'usuarios.carnet', '=', 'publicacion.id_usuario')
+        ->get();
 
         /* Evaluar si hay o no registros */
         if($publicaciones->count()>0){

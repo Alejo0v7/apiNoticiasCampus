@@ -14,7 +14,11 @@ class ComentarioController extends Controller
     public function index()
     {
         //
-        $comentarios = Comentario::all();
+        /* $comentarios = Comentario::all(); */
+        $comentarios = Comentario::select(
+            "comentarios.*", 'usuarios.usuario as usuario')
+        ->join('usuarios', 'usuarios.carnet', '=', 'comentarios.id_usuario')
+        ->get();
 
         /* Evaluar si hay o no registros */
         if($comentarios->count()>0){
