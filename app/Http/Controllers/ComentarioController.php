@@ -16,8 +16,8 @@ class ComentarioController extends Controller
         //
         /* $comentarios = Comentario::all(); */
         $comentarios = Comentario::select(
-            "comentarios.*", 'usuarios.usuario as usuario')
-        ->join('usuarios', 'usuarios.carnet', '=', 'comentarios.id_usuario')
+            "comentarios.*", 'users.usuario as usuario')
+        ->join('users', 'users.carnet', '=', 'comentarios.id_usuario')
         ->get();
 
         /* Evaluar si hay o no registros */

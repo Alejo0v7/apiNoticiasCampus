@@ -16,24 +16,26 @@ class PublicacionController extends Controller
         //
         /* $publicaciones = Publicacion::all(); */
         $publicaciones = Publicacion::select(
-            "publicacion.*", 'categorias.nombre as id_categoria',
-            'tipo_publicacion.tipo as id_tipo_publicacion',
-            'usuarios.usuario as id_usuario')
-        ->join('categorias', 'categorias.id', '=', 'publicacion.id_categoria')
-        ->join('tipo_publicacion', 'tipo_publicacion.id', '=', 'publicacion.id_tipo_publicacion')
-        ->join('usuarios', 'usuarios.carnet', '=', 'publicacion.id_usuario')
-        ->get();
+            "publicacion.*",
+            'categorias.nombre as categoria',
+            'tipo_publicacion.tipo as tipo_publicacion',
+            'users.usuario as usuario'
+        )
+            ->join('categorias', 'categorias.id', '=', 'publicacion.id_categoria')
+            ->join('tipo_publicacion', 'tipo_publicacion.id', '=', 'publicacion.id_tipo_publicacion')
+            ->join('users', 'users.carnet', '=', 'publicacion.id_usuario')
+            ->get();
 
         /* Evaluar si hay o no registros */
-        if($publicaciones->count()>0){
+        if ($publicaciones->count() > 0) {
             return response()->json([
-                'code'=>200,
-                'data'=>$publicaciones
+                'code' => 200,
+                'data' => $publicaciones
             ], 200);
         } else {
             return response()->json([
-                'code'=>404,
-                'data'=>'No hay registros de publicaciones.'
+                'code' => 404,
+                'data' => 'No hay registros de publicaciones.'
             ], 404);
         }
     }
@@ -66,7 +68,7 @@ class PublicacionController extends Controller
         ]);
 
         //Si falla la peticion
-        if ($validacion ->fails()){
+        if ($validacion->fails()) {
             return response()->json([
                 'code' => 400,
                 'data' => $validacion->messages()
@@ -80,19 +82,31 @@ class PublicacionController extends Controller
         }
     }
 
-    public function find($id){
-        $publicacion = Publicacion::find($id);
+    public function find($id)
+    {
+        $publicacion = Publicacion::select(
+            "publicacion.*",
+            'categorias.nombre as categoria',
+            'tipo_publicacion.tipo as tipo_publicacion',
+            'users.usuario as usuario'
+        )
+            ->join('categorias', 'categorias.id', '=', 'publicacion.id_categoria')
+            ->join('tipo_publicacion', 'tipo_publicacion.id', '=', 'publicacion.id_tipo_publicacion')
+            ->join('users', 'users.carnet', '=', 'publicacion.id_usuario')
+            ->where('publicacion.id', '=',  $id)
+            ->get();
+
         if ($publicacion) {
             return response()->json([
-                'code'=> 200,
-                'data'=> $publicacion
+                'code' => 200,
+                'data' => $publicacion
             ], 200);
         } else {
             return response()->json([
                 'code' => 404,
-                'data'=> 'Publicación no encontrada.'
+                'data' => 'Publicación no encontrada.'
             ], 404);
-        } 
+        }
     }
     /**
      * Display the specified resource.
@@ -113,7 +127,8 @@ class PublicacionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id){
+    public function update(Request $request, $id)
+    {
 
         $validacion = Validator::make($request->all(), [
             'titulo' => 'required',
@@ -129,7 +144,7 @@ class PublicacionController extends Controller
         ]);
 
         //Si falla la peticion
-        if ($validacion ->fails()){
+        if ($validacion->fails()) {
             return response()->json([
                 'code' => 400,
                 'data' => $validacion->messages()
@@ -138,16 +153,16 @@ class PublicacionController extends Controller
             $publicacion = Publicacion::find($id);
             if ($publicacion) {
                 $publicacion->update([
-                    'titulo'=>$request->titulo,
-                    'subtitulo'=>$request->subtitulo,
-                    'descripcion'=>$request->descripcion,
-                    'fecha'=>$request->fecha,
-                    'destacado'=>$request->destacado,
-                    'visible'=>$request->visible,
-                    'imagen'=>$request->imagen,
-                    'id_categoria'=>$request->id_categoria,
-                    'id_tipo_publicacion'=>$request->id_tipo_publicacion,
-                    'id_usuario'=>$request->id_usuario
+                    'titulo' => $request->titulo,
+                    'subtitulo' => $request->subtitulo,
+                    'descripcion' => $request->descripcion,
+                    'fecha' => $request->fecha,
+                    'destacado' => $request->destacado,
+                    'visible' => $request->visible,
+                    'imagen' => $request->imagen,
+                    'id_categoria' => $request->id_categoria,
+                    'id_tipo_publicacion' => $request->id_tipo_publicacion,
+                    'id_usuario' => $request->id_usuario
                 ]);
                 return response()->json([
                     'code' => 200,
@@ -155,8 +170,8 @@ class PublicacionController extends Controller
                 ], 200);
             } else {
                 return response()->json([
-                    'code'=>404,
-                    'data'=>'La publicación no existe.'
+                    'code' => 404,
+                    'data' => 'La publicación no existe.'
                 ], 404);
             }
         }
@@ -165,18 +180,46 @@ class PublicacionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function delete($id){
+    public function delete($id)
+    {
         $publicacion = Publicacion::find($id);
         if ($publicacion) {
             $publicacion->delete();
             return response()->json([
-                'code'=> 200,
-                'data'=> 'Publicación eliminada.'
+                'code' => 200,
+                'data' => 'Publicación eliminada.'
             ], 200);
         } else {
             return response()->json([
                 'code' => 404,
-                'data'=> 'Publicación no encontrada.'
+                'data' => 'Publicación no encontrada.'
+            ], 404);
+        }
+    }
+
+    public function publicacionesPorCategoria($categoriaId)
+    {
+        $publicaciones = Publicacion::select(
+            "publicacion.*",
+            'categorias.nombre as categoria',
+            'tipo_publicacion.tipo as tipo_publicacion',
+            'users.usuario as usuario'
+        )
+            ->join('categorias', 'categorias.id', '=', 'publicacion.id_categoria')
+            ->join('tipo_publicacion', 'tipo_publicacion.id', '=', 'publicacion.id_tipo_publicacion')
+            ->join('users', 'users.carnet', '=', 'publicacion.id_usuario')
+            ->where('categorias.id', '=',  $categoriaId)
+            ->get();
+
+        if ($publicaciones->count() > 0) {
+            return response()->json([
+                'code' => 200,
+                'data' => $publicaciones
+            ], 200);
+        } else {
+            return response()->json([
+                'code' => 404,
+                'data' => 'No hay registros de publicaciones para la categoría seleccionada.'
             ], 404);
         }
     }
